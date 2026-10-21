@@ -1,0 +1,9 @@
+# WebPortal .gitignore
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.log
+*.tmp
+bin/roslyn/
+obj/
