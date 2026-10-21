@@ -38,6 +38,11 @@
 
         if (string.IsNullOrEmpty(Username))
         {
+            Username = Request["user"];
+        }
+
+        if (string.IsNullOrEmpty(Username))
+        {
             Response.Redirect("Default.aspx?msg=need_login");
             return;
         }
@@ -120,22 +125,23 @@
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: #0b0114;
+            background-image: url('https://gunny2009.xyz/assets/game/images/playbackground.jpg');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: 1920px auto;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
+            overflow-x: auto;
         }
 
         /* Top Bar */
         .topbar {
-            height: 56px;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(12px);
+            height: 50px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-glass);
             display: flex;
             align-items: center;
@@ -248,8 +254,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 12px;
+            justify-content: flex-start;
+            padding-top: 246px;
+            padding-bottom: 80px;
+            min-height: 1150px;
         }
 
         .game-frame-wrapper {
@@ -257,10 +265,10 @@
             width: 1000px;
             height: 600px;
             background: #000;
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(249, 115, 22, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.7);
         }
 
         .game-frame-wrapper.fullscreen {

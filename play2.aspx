@@ -97,7 +97,11 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #000;
+            background-color: #0b0114;
+            background-image: url('https://gunny2009.xyz/assets/game/images/playbackground.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
         }
         #gameEmbed {
             width: 100%;
