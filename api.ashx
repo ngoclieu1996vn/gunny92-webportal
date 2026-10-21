@@ -78,6 +78,9 @@ namespace WebPortal
                     case "gm_search_items":
                         HandleGmSearchItems(context);
                         break;
+                    case "gm_unlock_fashion":
+                        HandleGmUnlockFashion(context);
+                        break;
                     default:
                         context.Response.Write("{\"success\":false,\"message\":\"Invalid action\"}");
                         break;
@@ -520,6 +523,90 @@ namespace WebPortal
             }
 
             context.Response.Write("{\"success\":true,\"message\":\"Đã gửi thư chứa vật phẩm thành công tới " + nickName + "! Hộp thư trong game sẽ sáng lên ngay lập tức (không cần F5).\"}");
+        }
+
+        private void HandleGmUnlockFashion(HttpContext context)
+        {
+            int userId = 0;
+            int.TryParse(context.Request["userId"], out userId);
+
+            if (userId <= 0)
+            {
+                context.Response.Write("{\"success\":false,\"message\":\"UserId không hợp lệ!\"}");
+                return;
+            }
+
+            // 1. Kick session first so Road.Service doesn't overwrite DB upon exit
+            CallGMBridge("kick", userId);
+            System.Threading.Thread.Sleep(1200);
+
+            string suitList = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,";
+
+            using (SqlConnection conn = new SqlConnection(ConnStr))
+            {
+                conn.Open();
+                using (SqlTransaction trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // 1. Delete existing avatar collections for this user
+                        using (SqlCommand cmdDel = new SqlCommand("DELETE FROM Db_Tank41.dbo.User_Avatar_Colection WHERE UserID = @uid", conn, trans))
+                        {
+                            cmdDel.Parameters.AddWithValue("@uid", userId);
+                            cmdDel.ExecuteNonQuery();
+                        }
+
+                        // 2. Insert all 71 avatar collections with full active items & expiry 2099
+                        string sqlInsertAvatar = @"
+                            INSERT INTO Db_Tank41.dbo.User_Avatar_Colection (UserID, endTime, dataId, ActiveCount, Sex, ActiveDress)
+                            SELECT 
+                                @uid AS UserID,
+                                CAST('2099-12-31 23:59:59' AS DATETIME) AS endTime,
+                                c.ID AS dataId,
+                                COUNT(g.TemplateID) AS ActiveCount,
+                                c.Sex,
+                                ISNULL(STRING_AGG(CAST(g.TemplateID AS varchar(20)), ','), '') AS ActiveDress
+                            FROM Db_Tank.dbo.Cloth_Property_Template c
+                            LEFT JOIN Db_Tank.dbo.Cloth_Group_Template g ON c.ID = g.ID AND c.Sex = g.Sex
+                            GROUP BY c.ID, c.Sex;";
+                        using (SqlCommand cmdAvatar = new SqlCommand(sqlInsertAvatar, conn, trans))
+                        {
+                            cmdAvatar.Parameters.AddWithValue("@uid", userId);
+                            cmdAvatar.ExecuteNonQuery();
+                        }
+
+                        // 3. Insert or Update Suit_Manager
+                        string sqlSuit = @"
+                            IF EXISTS (SELECT 1 FROM Db_Tank41.dbo.Suit_Manager WHERE UserID = @uid)
+                                UPDATE Db_Tank41.dbo.Suit_Manager SET Kill_List = @suitList WHERE UserID = @uid;
+                            ELSE
+                                INSERT INTO Db_Tank41.dbo.Suit_Manager (UserID, Kill_List) VALUES (@uid, @suitList);";
+                        using (SqlCommand cmdSuit = new SqlCommand(sqlSuit, conn, trans))
+                        {
+                            cmdSuit.Parameters.AddWithValue("@uid", userId);
+                            cmdSuit.Parameters.AddWithValue("@suitList", suitList);
+                            cmdSuit.ExecuteNonQuery();
+                        }
+
+                        // 4. Update fineSuitExp to max (345,860) in Sys_Users_Detail
+                        using (SqlCommand cmdExp = new SqlCommand("UPDATE Db_Tank41.dbo.Sys_Users_Detail SET fineSuitExp = 345860 WHERE UserID = @uid", conn, trans))
+                        {
+                            cmdExp.Parameters.AddWithValue("@uid", userId);
+                            cmdExp.ExecuteNonQuery();
+                        }
+
+                        trans.Commit();
+                        context.Response.Write("{\"success\":true,\"message\":\"Kích hoạt full 71 Bộ Sưu Tập Thời Trang (vĩnh viễn 2099), mở khóa toàn bộ 46 Trang Phục (Suits) và Max Tinh Luyện thành công!\"}");
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        context.Response.Write("{\"success\":false,\"message\":" + EncodeJson("Lỗi kích hoạt thời trang: " + ex.Message) + "}");
+                        return;
+                    }
+                }
+            }
         }
 
         private static void CallGMBridge(string action, int uid)

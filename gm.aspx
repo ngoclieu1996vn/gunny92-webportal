@@ -586,6 +586,9 @@
                 <button class="tab-btn" onclick="switchTab('tabItems')" id="btnTabItems">
                     <i class="fa-solid fa-gift"></i> Chuyển Đồ & Vũ Khí
                 </button>
+                <button class="tab-btn" onclick="switchTab('tabFashion')" id="btnTabFashion">
+                    <i class="fa-solid fa-shirt"></i> Thời Trang & Bộ Sưu Tập
+                </button>
             </div>
 
             <!-- Tab 1: Cấp độ & Tiền tệ -->
@@ -778,6 +781,51 @@
                 </div>
             </div>
 
+            <!-- Tab 3: Thời Trang & Bộ Sưu Tập -->
+            <div class="tab-content" id="tabFashion">
+                <div class="action-card" style="border-color: rgba(236, 72, 153, 0.4); background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(139, 92, 246, 0.08));">
+                    <div class="action-card-header">
+                        <div>
+                            <div class="action-card-title" style="color: #f472b6; font-size: 16px;">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Kích Hoạt 100% Full Thời Trang & Bộ Sưu Tập (Avatar Collection)
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
+                                Mở khóa vĩnh viễn toàn bộ thời trang và bộ sưu tập cho nhân vật đã chọn. Hệ thống tự động kích hoạt tối đa và cộng dồn toàn bộ chỉ số vào nhân vật.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 4px;">
+                        <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px;">
+                            <div style="color: #38bdf8; font-weight: 700; font-size: 13px; margin-bottom: 6px;">
+                                <i class="fa-solid fa-vest-patches"></i> 71 Bộ Sưu Tập Thời Trang (Avatar Collections)
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+                                Mở khóa 100% tất cả bộ sưu tập thời trang Nam & Nữ vĩnh viễn (Hạn dùng 2099). Nhận x2 toàn bộ thuộc tính Công, Thủ, Nhanh, May, Máu, Sát thương, Hộ giáp.
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px;">
+                            <div style="color: #a855f7; font-weight: 700; font-size: 13px; margin-bottom: 6px;">
+                                <i class="fa-solid fa-mask"></i> 46 Bộ Trang Phục (Suits) & Max Tinh Luyện
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+                                Kích hoạt toàn bộ 46 bộ trang phục đặc biệt (Suits) trong game và nâng Tinh Luyện Thời Trang (SetsBuild) lên cấp tối đa (345,860 Exp).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="font-size: 12px; color: #fb923c;">
+                            <i class="fa-solid fa-circle-info"></i> Hệ thống tự động kick nhẹ nhân vật để đồng bộ và lưu dữ liệu an toàn. Khi vào lại game, mở giao diện Thời Trang để trải nghiệm!
+                        </div>
+                        <button class="btn-quick-65" id="btnUnlockFashion" onclick="unlockFashion()" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; white-space: nowrap; cursor: pointer; padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 13px; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> KÍCH HOẠT FULL THỜI TRANG NGAY
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -825,6 +873,7 @@
             document.getElementById(tabId).classList.add('active');
             if (tabId === 'tabLevel') document.getElementById('btnTabLevel').classList.add('active');
             if (tabId === 'tabItems') document.getElementById('btnTabItems').classList.add('active');
+            if (tabId === 'tabFashion') document.getElementById('btnTabFashion').classList.add('active');
         }
 
         function selectPreset(id, name) {
@@ -935,6 +984,27 @@
 
             var url = 'api.ashx?action=gm_send_item&userId=' + selectedPlayer.userId + '&templateId=' + encodeURIComponent(tid) + '&count=' + encodeURIComponent(count) + '&strengthen=' + encodeURIComponent(str) + '&compose=' + encodeURIComponent(comp) + '&validDate=' + encodeURIComponent(val);
             ajaxGet(url, function (d) {
+                showToast(d.message, d.success);
+            });
+        }
+
+        function unlockFashion() {
+            if (!selectedPlayer) {
+                showToast('Vui lòng chọn nhân vật trước!', false);
+                return;
+            }
+            var pName = selectedPlayer.nickName || selectedPlayer.userName;
+            if (!confirm('Bạn có chắc chắn muốn kích hoạt 100% Full Thời Trang & Bộ Sưu Tập cho nhân vật [' + pName + '] không?')) {
+                return;
+            }
+            var btn = document.getElementById('btnUnlockFashion');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kích hoạt...';
+
+            var url = 'api.ashx?action=gm_unlock_fashion&userId=' + selectedPlayer.userId;
+            ajaxGet(url, function (d) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> KÍCH HOẠT FULL THỜI TRANG NGAY';
                 showToast(d.message, d.success);
             });
         }
