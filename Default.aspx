@@ -651,13 +651,13 @@
                 </div>
                 <h3>Client Windows (PC)</h3>
                 <p>
-                    Launcher tự động dành riêng cho máy tính Windows. Đã tích hợp sẵn Flash Player và cấu hình trực tiếp IP máy chủ 221.121.4.241, tải về giải nén chơi ngay!
+                    Phiên bản Client chuyên dụng Gunny 9.2 tích hợp bộ đệm cục bộ 0ms, chống lag giật và không cần cài đặt Flash. Đã cấu hình trọn gói tới máy chủ 221.121.4.241, tải về giải nén chơi ngay!
                 </p>
-                <a href="Gunny92_Launcher_Windows.zip" class="btn-card-download btn-win" id="btnDownloadWinZip">
-                    <i class="fa-solid fa-download"></i> Tải Launcher Windows Đã Sửa (.ZIP)
+                <a href="GunnyClient_V92_Full.zip" class="btn-card-download btn-win" id="btnDownloadClientFull" style="background: linear-gradient(135deg, #f97316, #ef4444); box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);">
+                    <i class="fa-solid fa-rocket"></i> Tải GunnyClient 9.2 Full (VIP Khuyên Dùng)
                 </a>
-                <a href="Gunny92_Launcher_Fix.zip" class="btn-card-download" id="btnDownloadFixZip" style="margin-top: 10px; background: rgba(249, 115, 22, 0.15); border: 1px solid rgba(249, 115, 22, 0.4); color: #fb923c;">
-                    <i class="fa-solid fa-wrench"></i> Tải Bản Vá Lỗi Nhanh (Fix Plugin)
+                <a href="Gunny92_Launcher_Windows.zip" class="btn-card-download" id="btnDownloadWinZip" style="margin-top: 8px; background: rgba(2, 132, 199, 0.15); border: 1px solid rgba(2, 132, 199, 0.4); color: #38bdf8;">
+                    <i class="fa-solid fa-download"></i> Tải Launcher Gọn Nhẹ (.ZIP)
                 </a>
             </div>
 
