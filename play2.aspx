@@ -112,6 +112,7 @@
 </head>
 <body>
     <embed src="<%= FlashUrl %>Loading.swf"
+           base="<%= FlashUrl %>"
            id="gameEmbed"
            quality="high"
            bgcolor="#000000"

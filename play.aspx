@@ -401,6 +401,7 @@
                         codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=11,0,0,0"
                         id="gameFlash" width="100%" height="100%">
                     <param name="movie" value="<%= FlashUrl %>Loading.swf" />
+                    <param name="base" value="<%= FlashUrl %>" />
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#000000" />
                     <param name="allowScriptAccess" value="always" />
@@ -409,6 +410,7 @@
                     <param name="flashvars" value="user=<%= Username %>&key=<%= KeyRand %>&v=104&rand=92386938&config=<%= ConfigUrl %>" />
                     
                     <embed src="<%= FlashUrl %>Loading.swf"
+                           base="<%= FlashUrl %>"
                            id="gameEmbed"
                            quality="high"
                            bgcolor="#000000"
