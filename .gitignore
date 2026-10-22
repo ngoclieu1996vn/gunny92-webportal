@@ -3,6 +3,13 @@
 *.rar
 *.7z
 *.tar.gz
+*.swf
+characterDefine.xml
+config.xml
+partical.xml
+particallite.xml
+resourceUpFile.xml
+update.xml
 *.log
 *.tmp
 bin/roslyn/

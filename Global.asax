@@ -11,5 +11,10 @@
         {
             Context.RewritePath("~/api/Oauth/GetBlockApp/default.aspx", Request.PathInfo, Request.QueryString.ToString());
         }
+        else if (path.EndsWith(".swf", StringComparison.OrdinalIgnoreCase) && !path.StartsWith("~/flash/", StringComparison.OrdinalIgnoreCase))
+        {
+            string filename = VirtualPathUtility.GetFileName(path);
+            Context.RewritePath("~/flash/" + filename, Request.PathInfo, Request.QueryString.ToString());
+        }
     }
 </script>
