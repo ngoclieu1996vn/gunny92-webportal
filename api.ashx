@@ -461,6 +461,12 @@ namespace WebPortal
             int compose = Convert.ToInt32(context.Request["compose"] ?? "50");
             int validDate = Convert.ToInt32(context.Request["validDate"] ?? "0"); // 0 = vĩnh viễn
 
+            if (count <= 0)
+            {
+                context.Response.Write("{\"success\":false,\"message\":\"Số lượng vật phẩm phải lớn hơn 0.\"}");
+                return;
+            }
+
             string nickName = "";
             using (SqlConnection conn = new SqlConnection(ConnStr))
             {
@@ -476,6 +482,18 @@ namespace WebPortal
                 {
                     context.Response.Write("{\"success\":false,\"message\":\"Không tìm thấy người nhận!\"}");
                     return;
+                }
+
+                // The send procedure reads the player database's catalog, not the GM search table.
+                using (SqlCommand templateCmd = new SqlCommand("SELECT MaxCount FROM Db_Tank41.dbo.Shop_Goods WHERE TemplateID = @tid", conn))
+                {
+                    templateCmd.Parameters.AddWithValue("@tid", templateId);
+                    object maxCount = templateCmd.ExecuteScalar();
+                    if (maxCount == null || maxCount == DBNull.Value || Convert.ToInt32(maxCount) <= 0)
+                    {
+                        context.Response.Write("{\"success\":false,\"message\":\"Vật phẩm chưa có trong danh mục gửi thư hoặc không thể gửi. Hãy đồng bộ danh mục trước.\"}");
+                        return;
+                    }
                 }
 
                 using (SqlCommand cmd = new SqlCommand("Db_Tank41.dbo.SP_Admin_SendUserItem", conn))
